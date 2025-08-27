@@ -658,7 +658,9 @@ const Settings = () => {
 
   const loadCarMakes = async () => {
     try {
+      console.log('Loading car makes...');
       const response = await axios.get(`${API}/car-makes`);
+      console.log('Car makes response:', response.data);
       setCarMakes(response.data);
     } catch (error) {
       console.error('Hiba autó márkák betöltésekor:', error);
