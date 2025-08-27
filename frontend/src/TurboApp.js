@@ -694,6 +694,15 @@ const Settings = () => {
     }
   };
 
+  const loadWorkProcesses = async () => {
+    try {
+      const response = await axios.get(`${API}/work-processes`);
+      setWorkProcesses(response.data);
+    } catch (error) {
+      console.error('Hiba munkafolyamatok betöltésekor:', error);
+    }
+  };
+
   // Configuration save
   const handleConfigSave = () => {
     saveAppConfig(config);
