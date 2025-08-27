@@ -923,81 +923,393 @@ const Settings = () => {
             {/* Logo & Design Tab */}
             {activeTab === 'branding' && (
               <div>
-                <h3 className="text-lg font-semibold mb-4">Logo és Design</h3>
+                <h3 className="text-lg font-semibold mb-6">🎨 Logo és Design beállítások</h3>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold mb-3">📷 Logo feltöltés</h4>
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                      {config.logoUrl ? (
-                        <div>
-                          <img 
-                            src={config.logoUrl} 
-                            alt="Current Logo" 
-                            className="mx-auto h-32 w-32 object-contain mb-4 rounded-lg shadow-md"
-                          />
-                          <p className="text-sm text-gray-600 mb-4">Jelenlegi logo</p>
-                        </div>
-                      ) : (
-                        <div className="mb-4">
-                          <div className="mx-auto h-32 w-32 bg-gray-200 rounded-lg flex items-center justify-center mb-4">
-                            <span className="text-gray-400 text-4xl">🖼️</span>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Logo feltöltés */}
+                  <div className="space-y-6">
+                    <div>
+                      <h4 className="font-semibold mb-3">📷 Logo feltöltés</h4>
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        {config.logoUrl ? (
+                          <div>
+                            <img 
+                              src={config.logoUrl} 
+                              alt="Current Logo" 
+                              className="mx-auto h-32 w-32 object-contain mb-4 rounded-lg shadow-md"
+                            />
+                            <p className="text-sm text-gray-600 mb-4">Jelenlegi logo</p>
                           </div>
-                          <p className="text-sm text-gray-600">Nincs logo feltöltve</p>
-                        </div>
-                      )}
-                      
-                      <input
-                        type="file"
-                        accept="image/png,image/jpeg,image/jpg"
-                        onChange={handleLogoUpload}
-                        className="hidden"
-                        id="logo-upload"
-                      />
-                      <label
-                        htmlFor="logo-upload"
-                        className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-600 font-medium"
-                      >
-                        📁 Logo kiválasztása
-                      </label>
-                      
-                      {config.logoUrl && (
-                        <button
-                          onClick={() => setConfig({...config, logoUrl: ''})}
-                          className="ml-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 font-medium"
+                        ) : (
+                          <div className="mb-4">
+                            <div className="mx-auto h-32 w-32 bg-gray-200 rounded-lg flex items-center justify-center mb-4">
+                              <span className="text-gray-400 text-4xl">🖼️</span>
+                            </div>
+                            <p className="text-sm text-gray-600">Nincs logo feltöltve</p>
+                          </div>
+                        )}
+                        
+                        <input
+                          type="file"
+                          accept="image/png,image/jpeg,image/jpg"
+                          onChange={handleLogoUpload}
+                          className="hidden"
+                          id="logo-upload"
+                        />
+                        <label
+                          htmlFor="logo-upload"
+                          className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-600 font-medium"
                         >
-                          🗑️ Logo törlése
-                        </button>
-                      )}
+                          📁 Logo kiválasztása
+                        </label>
+                        
+                        {config.logoUrl && (
+                          <button
+                            onClick={() => setConfig({...config, logoUrl: ''})}
+                            className="ml-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 font-medium"
+                          >
+                            🗑️ Logo törlése
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Színbeállítások */}
+                    <div>
+                      <h4 className="font-semibold mb-3">🌈 Színbeállítások</h4>
+                      <div className="grid grid-cols-1 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Elsődleges szín</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="color"
+                              value={config.design.primaryColor}
+                              onChange={(e) => setConfig({...config, design: {...config.design, primaryColor: e.target.value}})}
+                              className="h-10 w-16 rounded border"
+                            />
+                            <input
+                              type="text"
+                              value={config.design.primaryColor}
+                              onChange={(e) => setConfig({...config, design: {...config.design, primaryColor: e.target.value}})}
+                              className="flex-1 p-2 border border-gray-300 rounded font-mono"
+                              placeholder="#3B82F6"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Másodlagos szín</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="color"
+                              value={config.design.secondaryColor}
+                              onChange={(e) => setConfig({...config, design: {...config.design, secondaryColor: e.target.value}})}
+                              className="h-10 w-16 rounded border"
+                            />
+                            <input
+                              type="text"
+                              value={config.design.secondaryColor}
+                              onChange={(e) => setConfig({...config, design: {...config.design, secondaryColor: e.target.value}})}
+                              className="flex-1 p-2 border border-gray-300 rounded font-mono"
+                              placeholder="#10B981"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Kiemelő szín</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="color"
+                              value={config.design.accentColor}
+                              onChange={(e) => setConfig({...config, design: {...config.design, accentColor: e.target.value}})}
+                              className="h-10 w-16 rounded border"
+                            />
+                            <input
+                              type="text"
+                              value={config.design.accentColor}
+                              onChange={(e) => setConfig({...config, design: {...config.design, accentColor: e.target.value}})}
+                              className="flex-1 p-2 border border-gray-300 rounded font-mono"
+                              placeholder="#F59E0B"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Tipográfia */}
+                    <div>
+                      <h4 className="font-semibold mb-3">📝 Tipográfia</h4>
+                      <div className="grid grid-cols-1 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Fejléc betűtípus</label>
+                          <select
+                            value={config.design.headerFont}
+                            onChange={(e) => setConfig({...config, design: {...config.design, headerFont: e.target.value}})}
+                            className="w-full p-2 border border-gray-300 rounded"
+                          >
+                            <option value="Inter">Inter (Modern)</option>
+                            <option value="Roboto">Roboto (Clean)</option>
+                            <option value="Open Sans">Open Sans (Friendly)</option>
+                            <option value="Montserrat">Montserrat (Elegant)</option>
+                            <option value="Poppins">Poppins (Rounded)</option>
+                            <option value="Lato">Lato (Professional)</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Szöveg betűtípus</label>
+                          <select
+                            value={config.design.bodyFont}
+                            onChange={(e) => setConfig({...config, design: {...config.design, bodyFont: e.target.value}})}
+                            className="w-full p-2 border border-gray-300 rounded"
+                          >
+                            <option value="Inter">Inter (Modern)</option>
+                            <option value="Roboto">Roboto (Clean)</option>
+                            <option value="Open Sans">Open Sans (Friendly)</option>
+                            <option value="Source Sans Pro">Source Sans Pro (Technical)</option>
+                            <option value="Nunito">Nunito (Soft)</option>
+                            <option value="System UI">System UI (Native)</option>
+                          </select>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Szöveg méret (px)</label>
+                            <input
+                              type="number"
+                              min="12"
+                              max="24"
+                              value={config.design.fontSize}
+                              onChange={(e) => setConfig({...config, design: {...config.design, fontSize: e.target.value}})}
+                              className="w-full p-2 border border-gray-300 rounded"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Fejléc méret (px)</label>
+                            <input
+                              type="number"
+                              min="20"
+                              max="48"
+                              value={config.design.headerSize}
+                              onChange={(e) => setConfig({...config, design: {...config.design, headerSize: e.target.value}})}
+                              className="w-full p-2 border border-gray-300 rounded"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Egyéb beállítások */}
+                    <div>
+                      <h4 className="font-semibold mb-3">⚙️ Egyéb beállítások</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Lekerekítés (px)</label>
+                          <input
+                            type="number"
+                            min="0"
+                            max="24"
+                            value={config.design.borderRadius}
+                            onChange={(e) => setConfig({...config, design: {...config.design, borderRadius: e.target.value}})}
+                            className="w-full p-2 border border-gray-300 rounded"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Háttérszín</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="color"
+                              value={config.design.backgroundColor}
+                              onChange={(e) => setConfig({...config, design: {...config.design, backgroundColor: e.target.value}})}
+                              className="h-10 w-16 rounded border"
+                            />
+                            <input
+                              type="text"
+                              value={config.design.backgroundColor}
+                              onChange={(e) => setConfig({...config, design: {...config.design, backgroundColor: e.target.value}})}
+                              className="flex-1 p-2 border border-gray-300 rounded font-mono text-sm"
+                              placeholder="#F3F4F6"
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div>
-                    <h4 className="font-semibold mb-3">🎨 Design előnézet</h4>
-                    <div className="border rounded-lg p-4 bg-white">
-                      <div className="flex items-center gap-3 mb-4">
-                        {config.logoUrl && (
-                          <img 
-                            src={config.logoUrl} 
-                            alt="Logo Preview" 
-                            className="h-12 w-12 object-contain rounded shadow"
-                          />
-                        )}
-                        <div>
-                          <h5 className="text-xl font-bold text-gray-800">🔧 {config.appName}</h5>
-                          <p className="text-gray-600 text-sm">Teljes körű turbófeltöltő javítás kezelése</p>
+                  {/* Élő előnézet */}
+                  <div className="space-y-6">
+                    <div>
+                      <h4 className="font-semibold mb-3">👁️ Élő előnézet</h4>
+                      <div 
+                        className="border rounded-lg p-6 shadow-lg transition-all duration-300"
+                        style={{
+                          backgroundColor: config.design.backgroundColor,
+                          borderRadius: `${config.design.borderRadius}px`,
+                          fontFamily: config.design.bodyFont,
+                          fontSize: `${config.design.fontSize}px`,
+                          color: config.design.textColor
+                        }}
+                      >
+                        {/* Header előnézet */}
+                        <div className="flex items-center gap-4 mb-6 p-4 bg-white rounded-lg shadow-sm">
+                          {config.logoUrl && (
+                            <img 
+                              src={config.logoUrl} 
+                              alt="Logo Preview" 
+                              className="h-16 w-16 object-contain rounded shadow"
+                              style={{borderRadius: `${config.design.borderRadius}px`}}
+                            />
+                          )}
+                          <div>
+                            <h5 
+                              className="font-bold mb-1"
+                              style={{
+                                fontFamily: config.design.headerFont,
+                                fontSize: `${config.design.headerSize}px`,
+                                color: config.design.primaryColor
+                              }}
+                            >
+                              🔧 {config.appName}
+                            </h5>
+                            <p className="text-gray-600" style={{fontSize: `${config.design.fontSize-2}px`}}>
+                              Teljes körű turbófeltöltő javítás kezelése
+                            </p>
+                          </div>
                         </div>
+
+                        {/* Gombok előnézete */}
+                        <div className="flex flex-wrap gap-3 mb-6">
+                          <button 
+                            className="px-4 py-2 text-white font-medium transition-colors"
+                            style={{
+                              backgroundColor: config.design.primaryColor,
+                              borderRadius: `${config.design.borderRadius}px`,
+                              fontFamily: config.design.bodyFont
+                            }}
+                          >
+                            👥 Ügyfelek
+                          </button>
+                          <button 
+                            className="px-4 py-2 text-white font-medium transition-colors"
+                            style={{
+                              backgroundColor: config.design.secondaryColor,
+                              borderRadius: `${config.design.borderRadius}px`,
+                              fontFamily: config.design.bodyFont
+                            }}
+                          >
+                            📋 Munkalapok
+                          </button>
+                          <button 
+                            className="px-4 py-2 text-white font-medium transition-colors"
+                            style={{
+                              backgroundColor: config.design.accentColor,
+                              borderRadius: `${config.design.borderRadius}px`,
+                              fontFamily: config.design.bodyFont
+                            }}
+                          >
+                            ➕ Új Munkalap
+                          </button>
+                        </div>
+
+                        {/* Példa kártya */}
+                        <div 
+                          className="bg-white p-4 shadow-sm border"
+                          style={{borderRadius: `${config.design.borderRadius}px`}}
+                        >
+                          <h6 
+                            className="font-semibold mb-2"
+                            style={{
+                              color: config.design.primaryColor,
+                              fontFamily: config.design.headerFont,
+                              fontSize: `${parseInt(config.design.fontSize) + 2}px`
+                            }}
+                          >
+                            Példa munkalap
+                          </h6>
+                          <p className="text-gray-600" style={{fontFamily: config.design.bodyFont}}>
+                            Turbó kód: 5490-970-0071<br/>
+                            Ügyfél: Példa Péter<br/>
+                            Státusz: <span style={{color: config.design.secondaryColor}}>Javítás alatt</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Gyors színsémák */}
+                    <div>
+                      <h4 className="font-semibold mb-3">🎨 Gyors színsémák</h4>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          onClick={() => setConfig({...config, design: {...config.design, 
+                            primaryColor: "#3B82F6", secondaryColor: "#10B981", accentColor: "#F59E0B"}})}
+                          className="p-3 border rounded-lg hover:bg-gray-50 text-left"
+                        >
+                          <div className="flex gap-2 mb-2">
+                            <div className="w-4 h-4 rounded" style={{backgroundColor: "#3B82F6"}}></div>
+                            <div className="w-4 h-4 rounded" style={{backgroundColor: "#10B981"}}></div>
+                            <div className="w-4 h-4 rounded" style={{backgroundColor: "#F59E0B"}}></div>
+                          </div>
+                          <div className="text-sm font-medium">Modern Kék</div>
+                        </button>
+
+                        <button
+                          onClick={() => setConfig({...config, design: {...config.design, 
+                            primaryColor: "#EF4444", secondaryColor: "#F97316", accentColor: "#FBBF24"}})}
+                          className="p-3 border rounded-lg hover:bg-gray-50 text-left"
+                        >
+                          <div className="flex gap-2 mb-2">
+                            <div className="w-4 h-4 rounded" style={{backgroundColor: "#EF4444"}}></div>
+                            <div className="w-4 h-4 rounded" style={{backgroundColor: "#F97316"}}></div>
+                            <div className="w-4 h-4 rounded" style={{backgroundColor: "#FBBF24"}}></div>
+                          </div>
+                          <div className="text-sm font-medium">Energikus Vörös</div>
+                        </button>
+
+                        <button
+                          onClick={() => setConfig({...config, design: {...config.design, 
+                            primaryColor: "#8B5CF6", secondaryColor: "#A855F7", accentColor: "#EC4899"}})}
+                          className="p-3 border rounded-lg hover:bg-gray-50 text-left"
+                        >
+                          <div className="flex gap-2 mb-2">
+                            <div className="w-4 h-4 rounded" style={{backgroundColor: "#8B5CF6"}}></div>
+                            <div className="w-4 h-4 rounded" style={{backgroundColor: "#A855F7"}}></div>
+                            <div className="w-4 h-4 rounded" style={{backgroundColor: "#EC4899"}}></div>
+                          </div>
+                          <div className="text-sm font-medium">Lila Elegancia</div>
+                        </button>
+
+                        <button
+                          onClick={() => setConfig({...config, design: {...config.design, 
+                            primaryColor: "#374151", secondaryColor: "#6B7280", accentColor: "#9CA3AF"}})}
+                          className="p-3 border rounded-lg hover:bg-gray-50 text-left"
+                        >
+                          <div className="flex gap-2 mb-2">
+                            <div className="w-4 h-4 rounded" style={{backgroundColor: "#374151"}}></div>
+                            <div className="w-4 h-4 rounded" style={{backgroundColor: "#6B7280"}}></div>
+                            <div className="w-4 h-4 rounded" style={{backgroundColor: "#9CA3AF"}}></div>
+                          </div>
+                          <div className="text-sm font-medium">Minimál Szürke</div>
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-8 flex gap-4">
                   <button
                     onClick={handleConfigSave}
-                    className="bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 font-medium"
+                    className="bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 font-medium flex items-center gap-2"
                   >
                     💾 Design beállítások mentése
+                  </button>
+                  <button
+                    onClick={() => setConfig(getAppConfig())}
+                    className="bg-gray-500 text-white px-6 py-3 rounded hover:bg-gray-600 font-medium flex items-center gap-2"
+                  >
+                    🔄 Alapértelmezett visszaállítása
                   </button>
                 </div>
               </div>
