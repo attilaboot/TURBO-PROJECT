@@ -12,6 +12,18 @@ const getAppConfig = () => {
   return savedConfig ? JSON.parse(savedConfig) : {
     appName: "Turbó Szerviz Kezelő",
     logoUrl: "",
+    design: {
+      primaryColor: "#3B82F6",      // Kék
+      secondaryColor: "#10B981",    // Zöld  
+      accentColor: "#F59E0B",       // Narancs
+      backgroundColor: "#F3F4F6",   // Világos szürke
+      textColor: "#1F2937",         // Sötét szürke
+      headerFont: "Inter",          // Fejléc font
+      bodyFont: "Inter",            // Szöveg font
+      fontSize: "16",               // Alapértelmezett font méret (px)
+      headerSize: "32",             // Fejléc méret (px)
+      borderRadius: "8"             // Lekerekítés (px)
+    },
     labels: {
       clients: "Ügyfelek",
       workOrders: "Munkalapok", 
