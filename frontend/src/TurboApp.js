@@ -1296,6 +1296,9 @@ const Settings = () => {
     </div>
   );
 };
+
+// WorkOrders Component
+const WorkOrders = () => {
   const [workOrders, setWorkOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [loading, setLoading] = useState(true);
