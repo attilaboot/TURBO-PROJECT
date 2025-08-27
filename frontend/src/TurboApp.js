@@ -629,6 +629,14 @@ const Settings = () => {
   const [workProcesses, setWorkProcesses] = useState([]);
   const [turboParts, setTurboParts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [partCategories, setPartCategories] = useState([
+    {id: 1, name: 'C.H.R.A', description: 'Központi forgórész (Center Housing Rotating Assembly)'},
+    {id: 2, name: 'GEO', description: 'Geometria (Variable Geometry)'},
+    {id: 3, name: 'ACT', description: 'Aktuátor (Actuator)'},
+    {id: 4, name: 'SET.GAR', description: 'Javító készlet (Repair Kit)'},
+    {id: 5, name: 'HOUSING', description: 'Ház (Turbine/Compressor Housing)'},
+    {id: 6, name: 'BEARING', description: 'Csapágy (Bearing Kit)'}
+  ]);
 
   // Form states
   const [showCarMakeForm, setShowCarMakeForm] = useState(false);
@@ -636,11 +644,20 @@ const Settings = () => {
   const [showTurboNoteForm, setShowTurboNoteForm] = useState(false);
   const [showCarNoteForm, setShowCarNoteForm] = useState(false);
   const [selectedMakeForModel, setSelectedMakeForModel] = useState('');
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [showProcessForm, setShowProcessForm] = useState(false);
 
+  // Form data
   const [carMakeForm, setCarMakeForm] = useState({ name: '' });
   const [carModelForm, setCarModelForm] = useState({ make_id: '', name: '', engine_codes: '', common_turbos: '' });
   const [turboNoteForm, setTurboNoteForm] = useState({ turbo_code: '', note_type: 'WARNING', title: '', description: '' });
   const [carNoteForm, setCarNoteForm] = useState({ car_make: '', car_model: '', note_type: 'WARNING', title: '', description: '' });
+  const [categoryForm, setCategoryForm] = useState({ name: '', description: '' });
+  const [processForm, setProcessForm] = useState({ name: '', category: '', estimated_time: '', base_price: '', description: '' });
+
+  // Editing states
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [editingProcess, setEditingProcess] = useState(null);
 
   useEffect(() => {
     loadAllData();
