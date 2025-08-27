@@ -2466,39 +2466,114 @@ const NewWorkOrder = () => {
 
           {/* Right Side - Parts Selection & Pricing */}
           <div className="space-y-6">
-            {/* Parts Selection */}
+            {/* Parts & Services Selection */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold mb-4">🔧 Alkatrészek kiválasztása</h3>
+              <h3 className="text-lg font-semibold mb-4">🔧 Alkatrészek és szolgáltatások</h3>
               
-              <div className="grid grid-cols-1 gap-4">
-                {Object.entries(partsByCategory).map(([category, parts]) => (
-                  <div key={category} className="border border-gray-200 rounded-lg p-4">
-                    <h4 className="font-medium text-gray-800 mb-3">{category}</h4>
-                    <div className="space-y-2">
-                      {parts.map(part => (
-                        <label
-                          key={part.id}
-                          className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={isPartSelected(part.id)}
-                            onChange={() => handlePartToggle(part)}
-                            className="w-4 h-4 text-blue-600 rounded"
-                          />
-                          <div className="flex-1">
-                            <div className="font-mono text-sm">{part.part_code}</div>
-                            <div className="text-xs text-gray-500">{part.supplier}</div>
-                          </div>
-                          <div className="font-medium text-blue-600">
-                            {part.price.toFixed(0)} LEI
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+              {/* Category Selection */}
+              <div className="mb-6">
+                <h4 className="font-medium text-gray-800 mb-3">Szükséges kategóriák kiválasztása</h4>
+                <div className="grid grid-cols-2 gap-3">
+                  {Object.keys(partsByCategory).map(category => (
+                    <label
+                      key={category}
+                      className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-3 rounded border"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedCategories.includes(category)}
+                        onChange={() => handleCategoryToggle(category)}
+                        className="w-4 h-4 text-blue-600 rounded"
+                      />
+                      <div className="flex-1">
+                        <div className="font-medium">{category}</div>
+                        <div className="text-xs text-gray-500">
+                          {partsByCategory[category].length} alkatrész elérhető
+                        </div>
+                      </div>
+                    </label>
+                  ))}
+                </div>
               </div>
+
+              {/* Work Processes */}
+              <div className="mb-6">
+                <h4 className="font-medium text-gray-800 mb-3">Szükséges munkafolyamatok</h4>
+                <div className="grid grid-cols-1 gap-2">
+                  {workProcesses.map(process => (
+                    <label
+                      key={process.id}
+                      className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-3 rounded border"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isProcessSelected(process.id)}
+                        onChange={() => handleProcessToggle(process)}
+                        className="w-4 h-4 text-green-600 rounded"
+                      />
+                      <div className="flex-1">
+                        <div className="font-medium">{process.name}</div>
+                        <div className="text-xs text-gray-500">
+                          {process.category} • {process.estimated_time} perc • {process.base_price} LEI
+                        </div>
+                      </div>
+                      <div className="font-medium text-green-600">
+                        {process.base_price} LEI
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Selected Categories - Part Code Input */}
+              {selectedCategories.length > 0 && (
+                <div className="space-y-4">
+                  <h4 className="font-medium text-gray-800">Alkatrész kódok megadása</h4>
+                  {selectedCategories.map(category => (
+                    <div key={category} className="border border-blue-200 rounded-lg p-4 bg-blue-50">
+                      <h5 className="font-medium text-blue-800 mb-3">{category}</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Alkatrész kód
+                          </label>
+                          <input
+                            type="text"
+                            placeholder={`pl. ${getExamplePartCode(category)}`}
+                            value={categoryPartCodes[category] || ''}
+                            onChange={(e) => handlePartCodeChange(category, e.target.value)}
+                            className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 font-mono"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Várható ár (LEI)
+                          </label>
+                          <input
+                            type="number"
+                            placeholder="0"
+                            value={categoryPrices[category] || ''}
+                            onChange={(e) => handlePriceChange(category, e.target.value)}
+                            className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Megjegyzés
+                        </label>
+                        <textarea
+                          placeholder="Egyedi megjegyzések ehhez a kategóriához..."
+                          value={categoryNotes[category] || ''}
+                          onChange={(e) => handleCategoryNoteChange(category, e.target.value)}
+                          className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                          rows="2"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Pricing */}
