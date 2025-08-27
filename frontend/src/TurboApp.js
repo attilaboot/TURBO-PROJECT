@@ -2470,26 +2470,74 @@ const NewWorkOrder = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Autó márka *
                     </label>
-                    <input
-                      type="text"
-                      placeholder="pl. BMW, Audi, Mercedes"
-                      value={workOrderData.car_make}
-                      onChange={(e) => setWorkOrderData({...workOrderData, car_make: e.target.value})}
-                      className="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                    />
+                    <div className="relative">
+                      <select
+                        value={workOrderData.car_make}
+                        onChange={(e) => {
+                          setWorkOrderData({...workOrderData, car_make: e.target.value, car_model: ''});
+                          handleCarMakeSelect(e.target.value);
+                        }}
+                        className="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 bg-white"
+                      >
+                        <option value="">Válassz márkát...</option>
+                        {carMakes.map(make => (
+                          <option key={make.id} value={make.name}>{make.name}</option>
+                        ))}
+                        <option value="OTHER">🖊️ Egyéb (kézzel írom)</option>
+                      </select>
+                    </div>
+                    
+                    {workOrderData.car_make === 'OTHER' && (
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          placeholder="Írd be a márka nevét..."
+                          value={customCarMake}
+                          onChange={(e) => {
+                            setCustomCarMake(e.target.value);
+                            setWorkOrderData({...workOrderData, car_make: e.target.value});
+                          }}
+                          className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 bg-yellow-50"
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Autó típus *
                     </label>
-                    <input
-                      type="text"
-                      placeholder="pl. X5, A4, C-Class"
-                      value={workOrderData.car_model}
-                      onChange={(e) => setWorkOrderData({...workOrderData, car_model: e.target.value})}
-                      className="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                    />
+                    <div className="relative">
+                      <select
+                        value={workOrderData.car_model}
+                        onChange={(e) => setWorkOrderData({...workOrderData, car_model: e.target.value})}
+                        className="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 bg-white"
+                        disabled={!workOrderData.car_make || workOrderData.car_make === 'OTHER'}
+                      >
+                        <option value="">
+                          {!workOrderData.car_make ? 'Először válassz márkát...' : 'Válassz típust...'}
+                        </option>
+                        {filteredCarModels.map(model => (
+                          <option key={model.id} value={model.name}>{model.name}</option>
+                        ))}
+                        <option value="OTHER">🖊️ Egyéb (kézzel írom)</option>
+                      </select>
+                    </div>
+                    
+                    {workOrderData.car_model === 'OTHER' && (
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          placeholder="Írd be a típus nevét..."
+                          value={customCarModel}
+                          onChange={(e) => {
+                            setCustomCarModel(e.target.value);
+                            setWorkOrderData({...workOrderData, car_model: e.target.value});
+                          }}
+                          className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 bg-yellow-50"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
 
