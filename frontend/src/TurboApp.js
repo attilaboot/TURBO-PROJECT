@@ -2131,6 +2131,36 @@ const NewWorkOrder = () => {
     }
   };
 
+  const loadCarMakes = async () => {
+    try {
+      const response = await axios.get(`${API}/car-makes`);
+      setCarMakes(response.data);
+    } catch (error) {
+      console.error('Hiba autó márkák betöltésekor:', error);
+    }
+  };
+
+  const loadCarModels = async () => {
+    try {
+      const response = await axios.get(`${API}/car-models`);
+      setCarModels(response.data);
+    } catch (error) {
+      console.error('Hiba autó modellek betöltésekor:', error);
+    }
+  };
+
+  const handleCarMakeSelect = (selectedMake) => {
+    if (selectedMake && selectedMake !== 'OTHER') {
+      // Filter models by selected make
+      const filtered = carModels.filter(model => 
+        model.make_name === selectedMake
+      );
+      setFilteredCarModels(filtered);
+    } else {
+      setFilteredCarModels([]);
+    }
+  };
+
   const loadVehicles = async (clientId) => {
     try {
       const response = await axios.get(`${API}/vehicles?client_id=${clientId}`);
