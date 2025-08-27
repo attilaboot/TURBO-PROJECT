@@ -2102,6 +2102,8 @@ const NewWorkOrder = () => {
     loadClients();
     loadTurboParts();
     loadWorkProcesses();
+    loadCarMakes();
+    loadCarModels();
   }, []);
 
   const loadClients = async () => {
