@@ -2053,8 +2053,16 @@ const NewWorkOrder = () => {
   const [clients, setClients] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [turboParts, setTurboParts] = useState([]);
+  const [workProcesses, setWorkProcesses] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
+  
+  // New category-based part selection
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [categoryPartCodes, setCategoryPartCodes] = useState({});
+  const [categoryPrices, setCategoryPrices] = useState({});
+  const [categoryNotes, setCategoryNotes] = useState({});
+  
   const [workOrderData, setWorkOrderData] = useState({
     turbo_code: '',
     car_make: '',          // Autó gyártmány
