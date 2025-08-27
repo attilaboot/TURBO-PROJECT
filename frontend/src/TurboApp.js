@@ -1577,42 +1577,246 @@ const Settings = () => {
             {/* Parts & Work Processes Tab */}
             {activeTab === 'parts' && (
               <div>
-                <h3 className="text-lg font-semibold mb-4">🔧 Alkatrészek és munkafolyamatok</h3>
+                <h3 className="text-lg font-semibold mb-6">🔧 Alkatrészek és munkafolyamatok</h3>
                 
-                <div className="grid grid-cols-1 gap-6">
+                <div className="space-y-8">
+                  {/* Part Categories Management */}
                   <div className="bg-blue-50 p-6 rounded-lg">
-                    <h4 className="font-semibold text-blue-800 mb-4">⚙️ Munkafolyamatok ({workProcesses.length})</h4>
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
+                    <div className="flex justify-between items-center mb-4">
+                      <h4 className="font-semibold text-blue-800">📦 Alkatrész kategóriák kezelése</h4>
+                      <button
+                        onClick={() => setShowCategoryForm(!showCategoryForm)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 font-medium text-sm"
+                      >
+                        ➕ Új kategória
+                      </button>
+                    </div>
+
+                    {showCategoryForm && (
+                      <div className="mb-4 p-4 bg-white rounded border-2 border-blue-200">
+                        <form onSubmit={handleCategorySubmit} className="space-y-3">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input
+                              type="text"
+                              placeholder="Kategória neve (pl. C.H.R.A)"
+                              value={categoryForm.name}
+                              onChange={(e) => setCategoryForm({...categoryForm, name: e.target.value})}
+                              className="p-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                              required
+                            />
+                            <input
+                              type="text"
+                              placeholder="Leírás (pl. Központi forgórész)"
+                              value={categoryForm.description}
+                              onChange={(e) => setCategoryForm({...categoryForm, description: e.target.value})}
+                              className="p-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              type="submit"
+                              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 font-medium"
+                            >
+                              {editingCategory ? '💾 Mentés' : '➕ Hozzáadás'}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowCategoryForm(false);
+                                setEditingCategory(null);
+                                setCategoryForm({name: '', description: ''});
+                              }}
+                              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 font-medium"
+                            >
+                              ❌ Mégsem
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {partCategories.map(category => (
+                        <div key={category.id} className="p-4 bg-white rounded shadow border border-blue-200">
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <div className="font-bold text-blue-800">{category.name}</div>
+                              <div className="text-sm text-gray-600">{category.description}</div>
+                              <div className="text-xs text-gray-500 mt-1">
+                                {getTurboPartsCountByCategory(category.name)} alkatrész használja
+                              </div>
+                            </div>
+                            <div className="flex gap-1">
+                              <button
+                                onClick={() => handleEditCategory(category)}
+                                className="text-blue-600 hover:text-blue-800 p-1"
+                                title="Szerkesztés"
+                              >
+                                ✏️
+                              </button>
+                              <button
+                                onClick={() => handleDeleteCategory(category.id)}
+                                className="text-red-600 hover:text-red-800 p-1"
+                                title="Törlés"
+                              >
+                                🗑️
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Work Processes Management */}
+                  <div className="bg-green-50 p-6 rounded-lg">
+                    <div className="flex justify-between items-center mb-4">
+                      <h4 className="font-semibold text-green-800">⚙️ Munkafolyamatok ({workProcesses.length})</h4>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setShowProcessForm(!showProcessForm)}
+                          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 font-medium text-sm"
+                        >
+                          ➕ Új munkafolyamat
+                        </button>
+                        <Link to="/parts" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 font-medium text-sm">
+                          📝 Részletes szerkesztés
+                        </Link>
+                      </div>
+                    </div>
+
+                    {showProcessForm && (
+                      <div className="mb-4 p-4 bg-white rounded border-2 border-green-200">
+                        <form onSubmit={handleProcessSubmit} className="space-y-3">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <input
+                              type="text"
+                              placeholder="Munkafolyamat neve"
+                              value={processForm.name}
+                              onChange={(e) => setProcessForm({...processForm, name: e.target.value})}
+                              className="p-3 border border-gray-300 rounded focus:ring-2 focus:ring-green-500"
+                              required
+                            />
+                            <select
+                              value={processForm.category}
+                              onChange={(e) => setProcessForm({...processForm, category: e.target.value})}
+                              className="p-3 border border-gray-300 rounded focus:ring-2 focus:ring-green-500"
+                              required
+                            >
+                              <option value="">Válassz kategóriát...</option>
+                              <option value="Diagnosis">Diagnosztika</option>
+                              <option value="Disassembly">Szétszerelés</option>
+                              <option value="Cleaning">Tisztítás</option>
+                              <option value="Repair">Javítás</option>
+                              <option value="Assembly">Összeszerelés</option>
+                              <option value="Testing">Tesztelés</option>
+                            </select>
+                            <div className="grid grid-cols-2 gap-2">
+                              <input
+                                type="number"
+                                placeholder="Idő (perc)"
+                                value={processForm.estimated_time}
+                                onChange={(e) => setProcessForm({...processForm, estimated_time: e.target.value})}
+                                className="p-3 border border-gray-300 rounded focus:ring-2 focus:ring-green-500"
+                                required
+                              />
+                              <input
+                                type="number"
+                                placeholder="Ár (LEI)"
+                                value={processForm.base_price}
+                                onChange={(e) => setProcessForm({...processForm, base_price: e.target.value})}
+                                className="p-3 border border-gray-300 rounded focus:ring-2 focus:ring-green-500"
+                                required
+                              />
+                            </div>
+                          </div>
+                          <textarea
+                            placeholder="Leírás (opcionális)"
+                            value={processForm.description}
+                            onChange={(e) => setProcessForm({...processForm, description: e.target.value})}
+                            className="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-green-500"
+                            rows="2"
+                          />
+                          <div className="flex gap-2">
+                            <button
+                              type="submit"
+                              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 font-medium"
+                            >
+                              {editingProcess ? '💾 Mentés' : '➕ Hozzáadás'}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowProcessForm(false);
+                                setEditingProcess(null);
+                                setProcessForm({name: '', category: '', estimated_time: '', base_price: '', description: ''});
+                              }}
+                              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 font-medium"
+                            >
+                              ❌ Mégsem
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    )}
+
+                    <div className="space-y-2 max-h-64 overflow-y-auto">
                       {workProcesses.map(process => (
-                        <div key={process.id} className="flex justify-between items-center p-3 bg-white rounded">
-                          <div>
+                        <div key={process.id} className="flex justify-between items-center p-3 bg-white rounded shadow">
+                          <div className="flex-1">
                             <div className="font-medium">{process.name}</div>
-                            <div className="text-sm text-gray-600">{process.category} • {process.estimated_time} perc • {process.base_price} LEI</div>
+                            <div className="text-sm text-gray-600">
+                              {process.category} • {process.estimated_time} perc • {process.base_price} LEI
+                            </div>
+                            {process.description && (
+                              <div className="text-xs text-gray-500 mt-1">{process.description}</div>
+                            )}
+                          </div>
+                          <div className="flex gap-1 ml-4">
+                            <button
+                              onClick={() => handleEditProcess(process)}
+                              className="text-green-600 hover:text-green-800 p-1"
+                              title="Szerkesztés"
+                            >
+                              ✏️
+                            </button>
+                            <button
+                              onClick={() => handleDeleteProcess(process.id)}
+                              className="text-red-600 hover:text-red-800 p-1"
+                              title="Törlés"
+                            >
+                              🗑️
+                            </button>
                           </div>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="bg-purple-50 p-6 rounded-lg">
-                    <h4 className="font-semibold text-purple-800 mb-4">🔧 Turbó alkatrészek ({turboParts.length})</h4>
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {turboParts.map(part => (
-                        <div key={part.id} className="flex justify-between items-center p-3 bg-white rounded">
-                          <div>
-                            <div className="font-mono font-medium">{part.part_code}</div>
-                            <div className="text-sm text-gray-600">{part.category} • {part.supplier} • {part.price} LEI</div>
-                          </div>
+                  {/* Quick Statistics */}
+                  <div className="bg-gray-50 p-6 rounded-lg">
+                    <h4 className="font-semibold text-gray-800 mb-4">📊 Gyors statisztikák</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                      <div className="bg-white p-4 rounded shadow">
+                        <div className="text-2xl font-bold text-blue-600">{partCategories.length}</div>
+                        <div className="text-sm text-gray-600">Kategória</div>
+                      </div>
+                      <div className="bg-white p-4 rounded shadow">
+                        <div className="text-2xl font-bold text-purple-600">{turboParts.length}</div>
+                        <div className="text-sm text-gray-600">Alkatrész</div>
+                      </div>
+                      <div className="bg-white p-4 rounded shadow">
+                        <div className="text-2xl font-bold text-green-600">{workProcesses.length}</div>
+                        <div className="text-sm text-gray-600">Munkafolyamat</div>
+                      </div>
+                      <div className="bg-white p-4 rounded shadow">
+                        <div className="text-2xl font-bold text-orange-600">
+                          {workProcesses.reduce((sum, p) => sum + p.base_price, 0)}
                         </div>
-                      ))}
+                        <div className="text-sm text-gray-600">Össz munkaár (LEI)</div>
+                      </div>
                     </div>
                   </div>
-                </div>
-
-                <div className="mt-6 text-center">
-                  <Link to="/parts" className="bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 font-medium">
-                    📝 Részletes szerkesztés →
-                  </Link>
                 </div>
               </div>
             )}
