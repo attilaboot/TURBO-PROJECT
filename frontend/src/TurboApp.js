@@ -2085,6 +2085,9 @@ const NewWorkOrder = () => {
   const [showNewClientForm, setShowNewClientForm] = useState(false);
   const [carMakes, setCarMakes] = useState([]);
   const [carModels, setCarModels] = useState([]);
+  const [filteredCarModels, setFilteredCarModels] = useState([]);
+  const [customCarMake, setCustomCarMake] = useState('');
+  const [customCarModel, setCustomCarModel] = useState('');
   const [turboWarnings, setTurboWarnings] = useState([]);
   const [carWarnings, setCarWarnings] = useState([]);
   const [newClient, setNewClient] = useState({
