@@ -2119,6 +2119,15 @@ const NewWorkOrder = () => {
     }
   };
 
+  const loadWorkProcesses = async () => {
+    try {
+      const response = await axios.get(`${API}/work-processes`);
+      setWorkProcesses(response.data);
+    } catch (error) {
+      console.error('Hiba munkafolyamatok betöltésekor:', error);
+    }
+  };
+
   const loadVehicles = async (clientId) => {
     try {
       const response = await axios.get(`${API}/vehicles?client_id=${clientId}`);
