@@ -8,8 +8,7 @@ const API = `${BACKEND_URL}/api`;
 
 // Application Configuration
 const getAppConfig = () => {
-  const savedConfig = localStorage.getItem('turboAppConfig');
-  return savedConfig ? JSON.parse(savedConfig) : {
+  const defaultConfig = {
     appName: "Turbó Szerviz Kezelő",
     logoUrl: "",
     design: {
@@ -50,6 +49,31 @@ const getAppConfig = () => {
       backToMain: "Vissza a főoldalra"
     }
   };
+
+  const savedConfig = localStorage.getItem('turboAppConfig');
+  if (savedConfig) {
+    try {
+      const parsed = JSON.parse(savedConfig);
+      // Merge with defaults to ensure all properties exist
+      return {
+        ...defaultConfig,
+        ...parsed,
+        design: {
+          ...defaultConfig.design,
+          ...(parsed.design || {})
+        },
+        labels: {
+          ...defaultConfig.labels,
+          ...(parsed.labels || {})
+        }
+      };
+    } catch (error) {
+      console.error('Error parsing saved config, using defaults:', error);
+      return defaultConfig;
+    }
+  }
+  
+  return defaultConfig;
 };
 
 const saveAppConfig = (config) => {
