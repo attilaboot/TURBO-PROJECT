@@ -727,15 +727,117 @@ const Settings = () => {
       if (file.type.includes('image/')) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          setConfig({
-            ...config,
-            logoUrl: e.target.result
-          });
+          setConfig({...config, logoUrl: e.target.result});
         };
         reader.readAsDataURL(file);
       } else {
-        alert('Kérlek, csak kép fájlokat (PNG, JPG) válassz!');
+        alert('Csak képfájlok engedélyezettek (PNG, JPG, JPEG)');
       }
+    }
+  };
+
+  // Category management handlers
+  const handleCategorySubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editingCategory) {
+        // Update existing category
+        setPartCategories(prev => prev.map(cat => 
+          cat.id === editingCategory.id 
+            ? {...cat, name: categoryForm.name, description: categoryForm.description}
+            : cat
+        ));
+      } else {
+        // Add new category
+        const newCategory = {
+          id: Date.now(), // Simple ID generation
+          name: categoryForm.name,
+          description: categoryForm.description
+        };
+        setPartCategories(prev => [...prev, newCategory]);
+      }
+      
+      // Reset form
+      setCategoryForm({name: '', description: ''});
+      setShowCategoryForm(false);
+      setEditingCategory(null);
+      
+      alert(editingCategory ? 'Kategória frissítve!' : 'Új kategória hozzáadva!');
+    } catch (error) {
+      alert('Hiba: ' + error.message);
+    }
+  };
+
+  const handleEditCategory = (category) => {
+    setCategoryForm({name: category.name, description: category.description});
+    setEditingCategory(category);
+    setShowCategoryForm(true);
+  };
+
+  const handleDeleteCategory = (categoryId) => {
+    if (!window.confirm('Biztosan törölni szeretnéd ezt a kategóriát?')) return;
+    
+    setPartCategories(prev => prev.filter(cat => cat.id !== categoryId));
+    alert('Kategória törölve!');
+  };
+
+  const getTurboPartsCountByCategory = (categoryName) => {
+    return turboParts.filter(part => part.category === categoryName).length;
+  };
+
+  // Process management handlers  
+  const handleProcessSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const processData = {
+        name: processForm.name,
+        category: processForm.category,
+        estimated_time: parseInt(processForm.estimated_time),
+        base_price: parseFloat(processForm.base_price),
+        description: processForm.description
+      };
+
+      if (editingProcess) {
+        // Update existing process
+        await axios.put(`${API}/work-processes/${editingProcess.id}`, processData);
+      } else {
+        // Add new process
+        await axios.post(`${API}/work-processes`, processData);
+      }
+      
+      // Reset form and reload data
+      setProcessForm({name: '', category: '', estimated_time: '', base_price: '', description: ''});
+      setShowProcessForm(false);
+      setEditingProcess(null);
+      loadWorkProcesses();
+      
+      alert(editingProcess ? 'Munkafolyamat frissítve!' : 'Új munkafolyamat hozzáadva!');
+    } catch (error) {
+      alert('Hiba: ' + (error.response?.data?.detail || 'Nem sikerült menteni'));
+    }
+  };
+
+  const handleEditProcess = (process) => {
+    setProcessForm({
+      name: process.name,
+      category: process.category,
+      estimated_time: process.estimated_time.toString(),
+      base_price: process.base_price.toString(),
+      description: process.description || ''
+    });
+    setEditingProcess(process);
+    setShowProcessForm(true);
+  };
+
+  const handleDeleteProcess = async (processId) => {
+    if (!window.confirm('Biztosan törölni szeretnéd ezt a munkafolyamatot?')) return;
+    
+    try {
+      await axios.delete(`${API}/work-processes/${processId}`);
+      loadWorkProcesses();
+      alert('Munkafolyamat törölve!');
+    } catch (error) {
+      alert('Hiba: ' + (error.response?.data?.detail || 'Nem sikerült törölni'));
     }
   };
 
