@@ -2171,6 +2171,63 @@ const NewWorkOrder = () => {
     return part ? part.selected : false;
   };
 
+  // New category-based handlers
+  const handleCategoryToggle = (category) => {
+    setSelectedCategories(prev => 
+      prev.includes(category) 
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    );
+  };
+
+  const handlePartCodeChange = (category, code) => {
+    setCategoryPartCodes(prev => ({...prev, [category]: code}));
+  };
+
+  const handlePriceChange = (category, price) => {
+    setCategoryPrices(prev => ({...prev, [category]: parseFloat(price) || 0}));
+  };
+
+  const handleCategoryNoteChange = (category, note) => {
+    setCategoryNotes(prev => ({...prev, [category]: note}));
+  };
+
+  const isProcessSelected = (processId) => {
+    const process = workOrderData.processes.find(p => p.process_id === processId);
+    return process ? process.selected : false;
+  };
+
+  const handleProcessToggle = (process) => {
+    const updatedProcesses = [...workOrderData.processes];
+    const existingIndex = updatedProcesses.findIndex(p => p.process_id === process.id);
+    
+    if (existingIndex >= 0) {
+      updatedProcesses[existingIndex].selected = !updatedProcesses[existingIndex].selected;
+    } else {
+      updatedProcesses.push({
+        process_id: process.id,
+        process_name: process.name,
+        category: process.category,
+        estimated_time: process.estimated_time,
+        price: process.base_price,
+        selected: true,
+        notes: ''
+      });
+    }
+    
+    setWorkOrderData({...workOrderData, processes: updatedProcesses});
+  };
+
+  const getExamplePartCode = (category) => {
+    const examples = {
+      'C.H.R.A': '1303-090-400',
+      'GEO': '5306-016-071-0001', 
+      'ACT': '2061-016-006',
+      'SET.GAR': 'K7-110690'
+    };
+    return examples[category] || '0000-000-000';
+  };
+
   const calculateTotal = () => {
     const partsTotal = workOrderData.parts
       .filter(p => p.selected)
