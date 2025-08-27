@@ -2098,6 +2098,7 @@ const NewWorkOrder = () => {
   useEffect(() => {
     loadClients();
     loadTurboParts();
+    loadWorkProcesses();
   }, []);
 
   const loadClients = async () => {
